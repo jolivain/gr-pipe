@@ -1,19 +1,19 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2004,2010 Free Software Foundation, Inc.
- *
+ * 
  * This file is part of GNU Radio
- *
+ * 
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- *
+ * 
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
@@ -29,17 +29,18 @@
 #include "config.h"
 #endif
 
-#include <howto_square2_ff.h>
+//#include <iostream>
+#include <pipe_filter.h>
 #include <gr_io_signature.h>
 
 /*
- * Create a new instance of howto_square2_ff and return
+ * Create a new instance of pipe_filter and return
  * a boost shared_ptr.  This is effectively the public constructor.
  */
-howto_square2_ff_sptr
-howto_make_square2_ff ()
+pipe_filter_sptr 
+pipe_make_filter (size_t itemsize, double relative_rate)
 {
-  return gnuradio::get_initial_sptr(new howto_square2_ff ());
+  return gnuradio::get_initial_sptr(new pipe_filter (itemsize, relative_rate));
 }
 
 /*
@@ -48,8 +49,7 @@ howto_make_square2_ff ()
  * (2nd & 3rd args to gr_block's constructor).  The input and
  * output signatures are used by the runtime system to
  * check that a valid number and type of inputs and outputs
- * are connected to this block.  In this case, we accept
- * only 1 input and 1 output.
+ * are connected to this block.
  */
 static const int MIN_IN = 1;	// mininum number of input streams
 static const int MAX_IN = 1;	// maximum number of input streams
@@ -59,34 +59,47 @@ static const int MAX_OUT = 1;	// maximum number of output streams
 /*
  * The private constructor
  */
-howto_square2_ff::howto_square2_ff ()
-  : gr_sync_block ("square2_ff",
-		   gr_make_io_signature (MIN_IN, MAX_IN, sizeof (float)),
-		   gr_make_io_signature (MIN_OUT, MAX_OUT, sizeof (float)))
+
+pipe_filter::pipe_filter (size_t itemsize, double relative_rate)
+  : gr_block ("pipe_filter",
+	      gr_make_io_signature (MIN_IN,  MAX_IN,  itemsize),
+	      gr_make_io_signature (MIN_OUT, MAX_OUT, itemsize)),
+    d_itemsize (itemsize),
+    d_relative_rate (relative_rate)
 {
-  // nothing else required in this example
+  set_relative_rate(d_relative_rate);
 }
 
 /*
  * Our virtual destructor.
  */
-howto_square2_ff::~howto_square2_ff ()
+pipe_filter::~pipe_filter ()
 {
-  // nothing else required in this example
 }
 
-int
-howto_square2_ff::work (int noutput_items,
-			gr_vector_const_void_star &input_items,
-			gr_vector_void_star &output_items)
+
+void 
+pipe_filter::forecast (int noutput_items, gr_vector_int &ninput_items_required)
 {
-  const float *in = (const float *) input_items[0];
-  float *out = (float *) output_items[0];
+  ninput_items_required[0] = (double)(noutput_items) / d_relative_rate;
+}
 
-  for (int i = 0; i < noutput_items; i++){
-    out[i] = in[i] * in[i];
-  }
 
-  // Tell runtime system how many output items we produced.
-  return noutput_items;
+int 
+pipe_filter::general_work (int noutput_items,
+                           gr_vector_int &ninput_items,
+                           gr_vector_const_void_star &input_items,
+                           gr_vector_void_star &output_items)
+{
+  const uint8_t *in = (const uint8_t *) input_items[0];
+  int n_in_items = ninput_items[0];
+  uint8_t *out = (uint8_t *) output_items[0];
+
+  int n = std::min<int>(n_in_items, noutput_items);
+
+  std::cout << "Debug: processing " << n << " samples." << std::endl;
+
+  memcpy(out, in, n * d_itemsize);
+
+  return n;
 }

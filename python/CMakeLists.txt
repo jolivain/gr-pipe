@@ -31,7 +31,7 @@ endif()
 GR_PYTHON_INSTALL(
     FILES
     __init__.py
-    DESTINATION ${GR_PYTHON_DIR}/howto
+    DESTINATION ${GR_PYTHON_DIR}/pipe
 )
 
 ########################################################################
@@ -39,6 +39,6 @@ GR_PYTHON_INSTALL(
 ########################################################################
 include(GrTest)
 
-set(GR_TEST_TARGET_DEPS gnuradio-howto)
-set(GR_TEST_PYTHON_DIRS ${CMAKE_BINARY_DIR}/swig)
-GR_ADD_TEST(qa_howto ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_howto.py)
+#set(GR_TEST_TARGET_DEPS gnuradio-pipe)
+#set(GR_TEST_PYTHON_DIRS ${CMAKE_BINARY_DIR}/swig)
+#GR_ADD_TEST(qa_howto ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_pipe.py)

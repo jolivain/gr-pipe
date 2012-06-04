@@ -19,8 +19,8 @@
 
 include(GrPython)
 
-GR_PYTHON_INSTALL(
-    PROGRAMS
-    howto_square.py
-    DESTINATION bin
-)
+#GR_PYTHON_INSTALL(
+#    PROGRAMS
+#    pipe_filter.py
+#    DESTINATION bin
+#)

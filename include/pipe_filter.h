@@ -1,31 +1,31 @@
 /* -*- c++ -*- */
 /*
  * Copyright 2004 Free Software Foundation, Inc.
- *
+ * 
  * This file is part of GNU Radio
- *
+ * 
  * GNU Radio is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 3, or (at your option)
  * any later version.
- *
+ * 
  * GNU Radio is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * 
  * You should have received a copy of the GNU General Public License
  * along with GNU Radio; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 51 Franklin Street,
  * Boston, MA 02110-1301, USA.
  */
-#ifndef INCLUDED_HOWTO_SQUARE2_FF_H
-#define INCLUDED_HOWTO_SQUARE2_FF_H
+#ifndef INCLUDED_PIPE_FILTER_H
+#define INCLUDED_PIPE_FILTER_H
 
-#include <howto_api.h>
-#include <gr_sync_block.h>
+#include <pipe_api.h>
+#include <gr_block.h>
 
-class howto_square2_ff;
+class pipe_filter;
 
 /*
  * We use boost::shared_ptr's instead of raw pointers for all access
@@ -38,41 +38,48 @@ class howto_square2_ff;
  *
  * As a convention, the _sptr suffix indicates a boost::shared_ptr
  */
-typedef boost::shared_ptr<howto_square2_ff> howto_square2_ff_sptr;
+typedef boost::shared_ptr<pipe_filter> pipe_filter_sptr;
 
 /*!
- * \brief Return a shared_ptr to a new instance of howto_square2_ff.
+ * \brief Return a shared_ptr to a new instance of pipe_filter.
  *
- * To avoid accidental use of raw pointers, howto_square2_ff's
- * constructor is private.  howto_make_square2_ff is the public
+ * To avoid accidental use of raw pointers, pipe_filter's
+ * constructor is private.  chaos_make_dcsk_mod_cbc is the public
  * interface for creating new instances.
  */
-HOWTO_API howto_square2_ff_sptr howto_make_square2_ff ();
+PIPE_API pipe_filter_sptr pipe_make_filter (size_t itemsize, double relative_rate);
 
 /*!
- * \brief square2 a stream of floats.
+ * Create a filter block with any program connected through pipe.
  * \ingroup block
  *
- * This uses the preferred technique: subclassing gr_sync_block.
+ * This uses the preferred technique: subclassing gr_block.
  */
-class HOWTO_API howto_square2_ff : public gr_sync_block
+class PIPE_API pipe_filter : public gr_block
 {
 private:
-  // The friend declaration allows howto_make_square2_ff to
+  // The friend declaration allows pipe_make_filter to
   // access the private constructor.
 
-  friend HOWTO_API howto_square2_ff_sptr howto_make_square2_ff ();
+  friend PIPE_API pipe_filter_sptr pipe_make_filter (size_t itemsize, double relative_rate);
 
-  howto_square2_ff ();  	// private constructor
+  size_t d_itemsize;
+  double d_relative_rate;
 
- public:
-  ~howto_square2_ff ();	// public destructor
+  pipe_filter (size_t itemsize, double relative_rate);  	// private constructor
 
+
+public:
+  ~pipe_filter ();	// public destructor
+
+  void forecast (int noutput_items, gr_vector_int &ninput_items_required);
+  
   // Where all the action really happens
 
-  int work (int noutput_items,
-	    gr_vector_const_void_star &input_items,
-	    gr_vector_void_star &output_items);
+  int general_work (int noutput_items,
+		    gr_vector_int &ninput_items,
+		    gr_vector_const_void_star &input_items,
+		    gr_vector_void_star &output_items);
 };
 
-#endif /* INCLUDED_HOWTO_SQUARE2_FF_H */
+#endif /* INCLUDED_PIPE_FILTER_H */
