@@ -38,9 +38,11 @@
  * a boost shared_ptr.  This is effectively the public constructor.
  */
 pipe_filter_sptr 
-pipe_make_filter (size_t itemsize, double relative_rate)
+pipe_make_filter (size_t in_item_sz, size_t out_item_sz, double relative_rate)
 {
-  return gnuradio::get_initial_sptr(new pipe_filter (itemsize, relative_rate));
+  return gnuradio::get_initial_sptr(new pipe_filter (in_item_sz,
+                                                     out_item_sz,
+                                                     relative_rate));
 }
 
 /*
@@ -60,11 +62,14 @@ static const int MAX_OUT = 1;	// maximum number of output streams
  * The private constructor
  */
 
-pipe_filter::pipe_filter (size_t itemsize, double relative_rate)
+pipe_filter::pipe_filter (size_t in_item_sz,
+                          size_t out_item_sz,
+                          double relative_rate)
   : gr_block ("pipe_filter",
-	      gr_make_io_signature (MIN_IN,  MAX_IN,  itemsize),
-	      gr_make_io_signature (MIN_OUT, MAX_OUT, itemsize)),
-    d_itemsize (itemsize),
+	      gr_make_io_signature (MIN_IN,  MAX_IN,  in_item_sz),
+	      gr_make_io_signature (MIN_OUT, MAX_OUT, out_item_sz)),
+    d_in_item_sz (in_item_sz),
+    d_out_item_sz (out_item_sz),
     d_relative_rate (relative_rate)
 {
   set_relative_rate(d_relative_rate);
@@ -99,7 +104,7 @@ pipe_filter::general_work (int noutput_items,
 
   std::cout << "Debug: processing " << n << " samples." << std::endl;
 
-  memcpy(out, in, n * d_itemsize);
+  memcpy(out, in, n * d_in_item_sz);
 
   return n;
 }

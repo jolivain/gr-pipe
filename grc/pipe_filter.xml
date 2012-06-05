@@ -9,10 +9,10 @@
 	<key>pipe_filter</key>
         <category>Pipe</category>
 	<import>import pipe</import>
-	<make>pipe.filter($type.size*$vlen, $rel_rate)</make>
+	<make>pipe.filter($in_type.size*$in_vlen, $out_type.size*$out_vlen, $rel_rate)</make>
 	<param>
-		<name>Type</name>
-		<key>type</key>
+		<name>Input Type</name>
+		<key>in_type</key>
 		<type>enum</type>
 		<option>
 			<name>Complex</name>
@@ -41,8 +41,44 @@
 		</option>
 	</param>
 	<param>
-		<name>Vec Length</name>
-		<key>vlen</key>
+		<name>Input Vec Length</name>
+		<key>in_vlen</key>
+		<value>1</value>
+		<type>int</type>
+	</param>
+	<param>
+		<name>Output Type</name>
+		<key>out_type</key>
+		<type>enum</type>
+		<option>
+			<name>Complex</name>
+			<key>complex</key>
+			<opt>size:gr.sizeof_gr_complex</opt>
+		</option>
+		<option>
+			<name>Float</name>
+			<key>float</key>
+			<opt>size:gr.sizeof_float</opt>
+		</option>
+		<option>
+			<name>Int</name>
+			<key>int</key>
+			<opt>size:gr.sizeof_int</opt>
+		</option>
+		<option>
+			<name>Short</name>
+			<key>short</key>
+			<opt>size:gr.sizeof_short</opt>
+		</option>
+		<option>
+			<name>Byte</name>
+			<key>byte</key>
+			<opt>size:gr.sizeof_char</opt>
+		</option>
+	</param>
+	<param>
+		<name>Output Vec Length</name>
+		<key>out_vlen</key>
 		<value>1</value>
 		<type>int</type>
 	</param>
@@ -52,15 +88,16 @@
 		<value>1.0</value>
 		<type>real</type>
 	</param>
-	<check>$vlen &gt; 0</check>
+	<check>$in_vlen &gt; 0</check>
+	<check>$out_vlen &gt; 0</check>
 	<sink>
 		<name>in</name>
-		<type>$type</type>
-		<vlen>$vlen</vlen>
+		<type>$in_type</type>
+		<vlen>$in_vlen</vlen>
 	</sink>
 	<source>
 		<name>out</name>
-		<type>$type</type>
-		<vlen>$vlen</vlen>
+		<type>$out_type</type>
+		<vlen>$out_vlen</vlen>
 	</source>
 </block>

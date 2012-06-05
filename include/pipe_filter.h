@@ -47,7 +47,9 @@ typedef boost::shared_ptr<pipe_filter> pipe_filter_sptr;
  * constructor is private.  chaos_make_dcsk_mod_cbc is the public
  * interface for creating new instances.
  */
-PIPE_API pipe_filter_sptr pipe_make_filter (size_t itemsize, double relative_rate);
+PIPE_API pipe_filter_sptr pipe_make_filter (size_t in_item_sz,
+                                            size_t out_item_sz,
+                                            double relative_rate);
 
 /*!
  * Create a filter block with any program connected through pipe.
@@ -61,12 +63,15 @@ private:
   // The friend declaration allows pipe_make_filter to
   // access the private constructor.
 
-  friend PIPE_API pipe_filter_sptr pipe_make_filter (size_t itemsize, double relative_rate);
+  friend PIPE_API pipe_filter_sptr pipe_make_filter (size_t in_item_sz,
+                                                     size_t out_item_sz,
+                                                     double relative_rate);
 
-  size_t d_itemsize;
+  size_t d_in_item_sz;
+  size_t d_out_item_sz;
   double d_relative_rate;
 
-  pipe_filter (size_t itemsize, double relative_rate);  	// private constructor
+  pipe_filter (size_t in_item_sz, size_t out_item_sz, double relative_rate);  	// private constructor
 
 
 public:
