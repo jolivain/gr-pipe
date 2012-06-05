@@ -29,6 +29,10 @@
 #include "config.h"
 #endif
 
+#include <unistd.h>
+#include <fcntl.h>
+#include <stdio.h>
+
 //#include <iostream>
 #include <pipe_filter.h>
 #include <gr_io_signature.h>
@@ -78,6 +82,8 @@ pipe_filter::pipe_filter (size_t in_item_sz,
     d_relative_rate (relative_rate)
 {
   set_relative_rate(d_relative_rate);
+
+  create_command_process(cmd);
 }
 
 /*
@@ -85,6 +91,70 @@ pipe_filter::pipe_filter (size_t in_item_sz,
  */
 pipe_filter::~pipe_filter ()
 {
+}
+
+void
+pipe_filter::set_nonblock_fd(int fd)
+{
+  long ret;
+
+  ret = fcntl(fd, F_GETFL);
+  if (ret == -1) {
+    perror("fcntl()");
+    throw std::runtime_error("fcntl() error");
+  }
+
+  ret = fcntl(fd, F_SETFL, ret | O_NONBLOCK);
+  if (ret == -1) {
+    perror("fcntl()");
+    throw std::runtime_error("fcntl() error");
+  }
+}
+
+void
+pipe_filter::create_pipe(int pipefd[2])
+{
+  int ret;
+
+  ret = pipe(pipefd);
+  if (ret != 0) {
+    perror("pipe()");
+    throw std::runtime_error("pipe() error");
+  }
+}
+
+void
+pipe_filter::create_command_process(const char *cmd)
+{
+  create_pipe(d_cmd_stdin_pipe);
+  create_pipe(d_cmd_stdout_pipe);
+
+  d_cmd_pid = fork();
+  if (d_cmd_pid == -1) {
+    perror("fork()");
+    return ;
+  }
+  else if (d_cmd_pid == 0) {
+    dup2(d_cmd_stdin_pipe[0], STDIN_FILENO);
+    close(d_cmd_stdin_pipe[0]);
+    close(d_cmd_stdin_pipe[1]);
+
+    dup2(d_cmd_stdout_pipe[1], STDOUT_FILENO);
+    close(d_cmd_stdout_pipe[1]);
+    close(d_cmd_stdout_pipe[0]);
+
+    execl("/bin/sh", "sh", "-c", cmd, NULL);
+
+    perror("execl()");
+    exit(EXIT_FAILURE);
+  }
+  else {
+    close(d_cmd_stdin_pipe[0]);
+    set_nonblock_fd(d_cmd_stdin_pipe[1]);
+
+    set_nonblock_fd(d_cmd_stdout_pipe[0]);
+    close(d_cmd_stdout_pipe[1]);
+  }
 }
 
 
@@ -109,7 +179,16 @@ pipe_filter::general_work (int noutput_items,
 
   std::cout << "Debug: processing " << n << " samples." << std::endl;
 
-  memcpy(out, in, n * d_in_item_sz);
+  int ret;
+  ret = read(d_cmd_stdout_pipe[0], out, noutput_items * d_out_item_sz);
+  printf("read ret=%i\n", ret);
+  if (ret < 0)
+    perror("read()");
+
+  ret = write(d_cmd_stdin_pipe[1], in, n_in_items * d_in_item_sz);
+  printf("write ret=%i\n", ret);
+  if (ret < 0)
+    perror("write()");
 
   return n;
 }

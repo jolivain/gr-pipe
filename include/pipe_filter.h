@@ -73,10 +73,19 @@ private:
   size_t d_out_item_sz;
   double d_relative_rate;
 
+  // Runtime data
+  int d_cmd_stdin_pipe[2];
+  int d_cmd_stdout_pipe[2];
+  pid_t d_cmd_pid;
+
   pipe_filter (size_t in_item_sz,
                size_t out_item_sz,
                double relative_rate,
                const char *cmd);  	// private constructor
+
+  void create_command_process(const char *cmd);
+  void create_pipe(int pipe[2]);
+  void set_nonblock_fd(int fd);
 
 
 public:
