@@ -38,11 +38,15 @@
  * a boost shared_ptr.  This is effectively the public constructor.
  */
 pipe_filter_sptr 
-pipe_make_filter (size_t in_item_sz, size_t out_item_sz, double relative_rate)
+pipe_make_filter (size_t in_item_sz,
+                  size_t out_item_sz,
+                  double relative_rate,
+                  const char *cmd)
 {
   return gnuradio::get_initial_sptr(new pipe_filter (in_item_sz,
                                                      out_item_sz,
-                                                     relative_rate));
+                                                     relative_rate,
+                                                     cmd));
 }
 
 /*
@@ -64,7 +68,8 @@ static const int MAX_OUT = 1;	// maximum number of output streams
 
 pipe_filter::pipe_filter (size_t in_item_sz,
                           size_t out_item_sz,
-                          double relative_rate)
+                          double relative_rate,
+                          const char *cmd)
   : gr_block ("pipe_filter",
 	      gr_make_io_signature (MIN_IN,  MAX_IN,  in_item_sz),
 	      gr_make_io_signature (MIN_OUT, MAX_OUT, out_item_sz)),

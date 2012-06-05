@@ -9,7 +9,7 @@
 	<key>pipe_filter</key>
         <category>Pipe</category>
 	<import>import pipe</import>
-	<make>pipe.filter($in_type.size*$in_vlen, $out_type.size*$out_vlen, $rel_rate)</make>
+	<make>pipe.filter($in_type.size*$in_vlen, $out_type.size*$out_vlen, $rel_rate, $command)</make>
 	<param>
 		<name>Input Type</name>
 		<key>in_type</key>
@@ -88,8 +88,16 @@
 		<value>1.0</value>
 		<type>real</type>
 	</param>
+
+        <param>
+                <name>Command</name>
+                <key>command</key>
+                <value></value>
+                <type>string</type>
+        </param>
 	<check>$in_vlen &gt; 0</check>
 	<check>$out_vlen &gt; 0</check>
+	<check>len($command) &gt; 0</check>
 	<sink>
 		<name>in</name>
 		<type>$in_type</type>

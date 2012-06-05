@@ -49,7 +49,8 @@ typedef boost::shared_ptr<pipe_filter> pipe_filter_sptr;
  */
 PIPE_API pipe_filter_sptr pipe_make_filter (size_t in_item_sz,
                                             size_t out_item_sz,
-                                            double relative_rate);
+                                            double relative_rate,
+                                            const char *cmd);
 
 /*!
  * Create a filter block with any program connected through pipe.
@@ -65,13 +66,17 @@ private:
 
   friend PIPE_API pipe_filter_sptr pipe_make_filter (size_t in_item_sz,
                                                      size_t out_item_sz,
-                                                     double relative_rate);
+                                                     double relative_rate,
+                                                     const char *cmd);
 
   size_t d_in_item_sz;
   size_t d_out_item_sz;
   double d_relative_rate;
 
-  pipe_filter (size_t in_item_sz, size_t out_item_sz, double relative_rate);  	// private constructor
+  pipe_filter (size_t in_item_sz,
+               size_t out_item_sz,
+               double relative_rate,
+               const char *cmd);  	// private constructor
 
 
 public:
