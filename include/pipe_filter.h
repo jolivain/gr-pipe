@@ -85,8 +85,10 @@ private:
 
   void create_command_process(const char *cmd);
   void create_pipe(int pipe[2]);
-  void set_nonblock_fd(int fd);
-
+  void set_fd_flags(int fd, long flags);
+  void reset_fd_flags(int fd, long flags);
+  int read_process_output(uint8_t *out, int nitems);
+  void write_process_input(const uint8_t *in, int nitems);
 
 public:
   ~pipe_filter ();	// public destructor
