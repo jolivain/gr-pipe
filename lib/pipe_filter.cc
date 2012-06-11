@@ -37,8 +37,7 @@
 #include <sys/wait.h>
 #include <errno.h>
 
-
-//#include <iostream>
+#include <iostream>
 #include <pipe_filter.h>
 #include <gr_io_signature.h>
 
@@ -107,7 +106,7 @@ pipe_filter::~pipe_filter ()
   reset_fd_flags(d_cmd_stdin_pipe[1], O_NONBLOCK);
   reset_fd_flags(d_cmd_stdout_pipe[0], O_NONBLOCK);
 
-  close(d_cmd_stdin_pipe[1]);
+  fclose(d_cmd_stdin);
 
   i = 0;
   do {
@@ -118,7 +117,7 @@ pipe_filter::~pipe_filter ()
     }
     i++;
   } while (i < 256 && sz > 0);
-  close(d_cmd_stdout_pipe[0]);
+  fclose(d_cmd_stdout);
 
   do {
     ret = waitpid(d_cmd_pid, &pstat, 0);
@@ -130,11 +129,16 @@ pipe_filter::~pipe_filter ()
   }
 
   if (WIFEXITED(pstat))
-    std::cerr << "Process exited with code " << WEXITSTATUS(pstat);
+    std::cerr << "Process exited with code " << WEXITSTATUS(pstat) << std::endl;
   else
-    std::cerr << "Abnormal process termination\n";
+    std::cerr << "Abnormal process termination" << std::endl;
 }
 
+void
+pipe_filter::set_unbuffered(bool unbuffered)
+{
+  d_unbuffered = unbuffered;
+}
 
 void
 pipe_filter::set_fd_flags(int fd, long flags)
@@ -215,6 +219,20 @@ pipe_filter::create_command_process(const char *cmd)
 
     set_fd_flags(d_cmd_stdout_pipe[0], O_NONBLOCK);
     close(d_cmd_stdout_pipe[1]);
+
+    d_cmd_stdin = fdopen(d_cmd_stdin_pipe[1], "w");
+    if (d_cmd_stdin == NULL) {
+      perror("fdopen()");
+      throw std::runtime_error("fdopen() error");
+      return ;
+    }
+
+    d_cmd_stdout = fdopen(d_cmd_stdout_pipe[0], "r");
+    if (d_cmd_stdout == NULL) {
+      perror("fdopen()");
+      throw std::runtime_error("fdopen() error");
+      return ;
+    }
   }
 }
 
@@ -228,29 +246,40 @@ pipe_filter::forecast (int noutput_items, gr_vector_int &ninput_items_required)
 int
 pipe_filter::read_process_output(uint8_t *out, int nitems)
 {
-  int ret;
-  size_t sz;
+  size_t ret;
 
-  ret = read(d_cmd_stdout_pipe[0], out, nitems * d_out_item_sz);
-  printf("read ret=%i\n", ret);
-  if (ret < 0)
-    perror("read()");
+  ret = fread(out, d_out_item_sz, nitems, d_cmd_stdout);
+  if (    ret == 0
+       && ferror(d_cmd_stdout)
+       && errno != EAGAIN
+       && errno != EWOULDBLOCK) {
+    throw std::runtime_error("fread() error");
+    return (-1);
+  }
 
-  return (nitems);
+  return (ret);
 }
 
-void
+int
 pipe_filter::write_process_input(const uint8_t *in, int nitems)
 {
-  int ret;
+  size_t ret;
 
-  ret = write(d_cmd_stdin_pipe[1], in, nitems * d_in_item_sz);
-  printf("write ret=%i\n", ret);
-  if (ret < 0)
-    perror("write()");
+  ret = fwrite(in, d_in_item_sz, nitems, d_cmd_stdin);
+  if (    ret == 0
+       && ferror(d_cmd_stdin)
+       && errno != EAGAIN
+       && errno != EWOULDBLOCK) {
+    throw std::runtime_error("fwrite() error");
+    return (-1);
+  }
 
-  consume_each(nitems);
+  if (d_unbuffered)
+    fflush(d_cmd_stdin);
+
+  return (ret);
 }
+
 
 int 
 pipe_filter::general_work (int noutput_items,
@@ -261,14 +290,18 @@ pipe_filter::general_work (int noutput_items,
   const uint8_t *in = (const uint8_t *) input_items[0];
   int n_in_items = ninput_items[0];
   uint8_t *out = (uint8_t *) output_items[0];
+  int n_produced;
+  int n_consumed;
 
-  int n = std::min<int>(n_in_items, noutput_items);
+  n_produced = read_process_output(out, noutput_items);
+  if (n_produced < 0)
+    return (n_produced);
 
-  std::cout << "Debug: processing " << n << " samples." << std::endl;
+  n_consumed = write_process_input(in, n_in_items);
+  if (n_consumed < 0)
+    return (n_consumed);
 
-  n = read_process_output(out, noutput_items);
+  consume_each(n_consumed);
 
-  write_process_input(in, n_in_items);
-
-  return n;
+  return (n_produced);
 }

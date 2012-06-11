@@ -22,6 +22,7 @@
 #ifndef INCLUDED_PIPE_FILTER_H
 #define INCLUDED_PIPE_FILTER_H
 
+#include <stdio.h>
 #include <pipe_api.h>
 #include <gr_block.h>
 
@@ -72,10 +73,13 @@ private:
   size_t d_in_item_sz;
   size_t d_out_item_sz;
   double d_relative_rate;
+  bool   d_unbuffered;
 
   // Runtime data
   int d_cmd_stdin_pipe[2];
   int d_cmd_stdout_pipe[2];
+  FILE *d_cmd_stdin;
+  FILE *d_cmd_stdout;
   pid_t d_cmd_pid;
 
   pipe_filter (size_t in_item_sz,
@@ -88,12 +92,14 @@ private:
   void set_fd_flags(int fd, long flags);
   void reset_fd_flags(int fd, long flags);
   int read_process_output(uint8_t *out, int nitems);
-  void write_process_input(const uint8_t *in, int nitems);
+  int write_process_input(const uint8_t *in, int nitems);
 
 public:
   ~pipe_filter ();	// public destructor
 
   void forecast (int noutput_items, gr_vector_int &ninput_items_required);
+
+  void set_unbuffered (bool unbuffered);
   
   // Where all the action really happens
 

@@ -9,7 +9,8 @@
 	<key>pipe_filter</key>
         <category>Pipe</category>
 	<import>import pipe</import>
-	<make>pipe.filter($in_type.size*$in_vlen, $out_type.size*$out_vlen, $rel_rate, $command)</make>
+	<make>pipe.filter($in_type.size*$in_vlen, $out_type.size*$out_vlen, $rel_rate, $command)
+self.$(id).set_unbuffered($unbuffered)</make>
 	<param>
 		<name>Input Type</name>
 		<key>in_type</key>
@@ -94,6 +95,20 @@
                 <key>command</key>
                 <value></value>
                 <type>string</type>
+        </param>
+        <param>
+                <name>Unbuffered</name>
+                <key>unbuffered</key>
+                <value>False</value>
+                <type>bool</type>
+                <option>
+                                <name>Off</name>
+                                <key>False</key>
+                </option>
+                <option>
+                                <name>On</name>
+                                <key>True</key>
+                </option>
         </param>
 	<check>$in_vlen &gt; 0</check>
 	<check>$out_vlen &gt; 0</check>
