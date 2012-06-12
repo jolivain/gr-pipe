@@ -56,6 +56,9 @@ GR_SWIG_INSTALL(TARGETS pipe_swig DESTINATION ${GR_PYTHON_DIR}/pipe)
 install(
     FILES
     pipe_swig.i
+    pipe_filter.i
+    pipe_source.i
+    pipe_sink.i
     ${CMAKE_CURRENT_BINARY_DIR}/pipe_swig_doc.i
     DESTINATION ${GR_INCLUDE_DIR}/pipe/swig
 )

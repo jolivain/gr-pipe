@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## Pipe Source
+###################################################
+ -->
+<block>
+	<name>Pipe Source</name>
+	<key>pipe_source</key>
+        <category>Pipe</category>
+	<import>import pipe</import>
+	<make>pipe.source($out_type.size*$out_vlen, $command)</make>
+	<param>
+		<name>Output Type</name>
+		<key>out_type</key>
+		<type>enum</type>
+		<option>
+			<name>Complex</name>
+			<key>complex</key>
+			<opt>size:gr.sizeof_gr_complex</opt>
+		</option>
+		<option>
+			<name>Float</name>
+			<key>float</key>
+			<opt>size:gr.sizeof_float</opt>
+		</option>
+		<option>
+			<name>Int</name>
+			<key>int</key>
+			<opt>size:gr.sizeof_int</opt>
+		</option>
+		<option>
+			<name>Short</name>
+			<key>short</key>
+			<opt>size:gr.sizeof_short</opt>
+		</option>
+		<option>
+			<name>Byte</name>
+			<key>byte</key>
+			<opt>size:gr.sizeof_char</opt>
+		</option>
+	</param>
+	<param>
+		<name>Output Vec Length</name>
+		<key>out_vlen</key>
+		<value>1</value>
+		<type>int</type>
+	</param>
+        <param>
+                <name>Command</name>
+                <key>command</key>
+                <value></value>
+                <type>string</type>
+        </param>
+	<check>$out_vlen &gt; 0</check>
+	<check>len($command) &gt; 0</check>
+	<source>
+		<name>out</name>
+		<type>$out_type</type>
+		<vlen>$out_vlen</vlen>
+	</source>
+</block>

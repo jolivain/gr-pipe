@@ -19,5 +19,7 @@
 
 install(FILES
     pipe_filter.xml
+    pipe_source.xml
+    pipe_sink.xml
     DESTINATION share/gnuradio/grc/blocks
 )

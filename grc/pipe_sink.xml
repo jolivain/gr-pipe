@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<!--
+###################################################
+## Pipe Sink
+###################################################
+ -->
+<block>
+	<name>Pipe Sink</name>
+	<key>pipe_sink</key>
+        <category>Pipe</category>
+	<import>import pipe</import>
+	<make>pipe.sink($in_type.size*$in_vlen, $command)
+self.$(id).set_unbuffered($unbuffered)</make>
+	<param>
+		<name>Input Type</name>
+		<key>in_type</key>
+		<type>enum</type>
+		<option>
+			<name>Complex</name>
+			<key>complex</key>
+			<opt>size:gr.sizeof_gr_complex</opt>
+		</option>
+		<option>
+			<name>Float</name>
+			<key>float</key>
+			<opt>size:gr.sizeof_float</opt>
+		</option>
+		<option>
+			<name>Int</name>
+			<key>int</key>
+			<opt>size:gr.sizeof_int</opt>
+		</option>
+		<option>
+			<name>Short</name>
+			<key>short</key>
+			<opt>size:gr.sizeof_short</opt>
+		</option>
+		<option>
+			<name>Byte</name>
+			<key>byte</key>
+			<opt>size:gr.sizeof_char</opt>
+		</option>
+	</param>
+	<param>
+		<name>Input Vec Length</name>
+		<key>in_vlen</key>
+		<value>1</value>
+		<type>int</type>
+	</param>
+        <param>
+                <name>Command</name>
+                <key>command</key>
+                <value></value>
+                <type>string</type>
+        </param>
+        <param>
+                <name>Unbuffered</name>
+                <key>unbuffered</key>
+                <value>False</value>
+                <type>bool</type>
+                <option>
+                                <name>Off</name>
+                                <key>False</key>
+                </option>
+                <option>
+                                <name>On</name>
+                                <key>True</key>
+                </option>
+        </param>
+	<check>$in_vlen &gt; 0</check>
+	<check>len($command) &gt; 0</check>
+	<sink>
+		<name>in</name>
+		<type>$in_type</type>
+		<vlen>$in_vlen</vlen>
+	</sink>
+</block>

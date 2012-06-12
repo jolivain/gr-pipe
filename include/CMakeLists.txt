@@ -23,5 +23,7 @@
 install(FILES
     pipe_api.h
     pipe_filter.h
+    pipe_source.h
+    pipe_sink.h
     DESTINATION include/pipe
 )
