@@ -216,8 +216,10 @@ pipe_filter::create_command_process(const char *cmd)
   else {
     close(d_cmd_stdin_pipe[0]);
     set_fd_flags(d_cmd_stdin_pipe[1], O_NONBLOCK);
+    fcntl(d_cmd_stdin_pipe[1], F_SETFD, FD_CLOEXEC);
 
     set_fd_flags(d_cmd_stdout_pipe[0], O_NONBLOCK);
+    fcntl(d_cmd_stdout_pipe[0], F_SETFD, FD_CLOEXEC);
     close(d_cmd_stdout_pipe[1]);
 
     d_cmd_stdin = fdopen(d_cmd_stdin_pipe[1], "w");

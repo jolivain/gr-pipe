@@ -148,6 +148,8 @@ pipe_source::create_command_process(const char *cmd)
   else {
     close(d_cmd_stdout_pipe[1]);
 
+    fcntl(d_cmd_stdout_pipe[0], F_SETFD, FD_CLOEXEC);
+
     d_cmd_stdout = fdopen(d_cmd_stdout_pipe[0], "r");
     if (d_cmd_stdout == NULL) {
       perror("fdopen()");

@@ -185,6 +185,8 @@ pipe_sink::create_command_process(const char *cmd)
     close(d_cmd_stdin_pipe[0]);
     set_fd_flags(d_cmd_stdin_pipe[1], O_NONBLOCK);
 
+    fcntl(d_cmd_stdin_pipe[1], F_SETFD, FD_CLOEXEC);
+
     d_cmd_stdin = fdopen(d_cmd_stdin_pipe[1], "w");
     if (d_cmd_stdin == NULL) {
       perror("fdopen()");
