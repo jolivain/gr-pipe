@@ -93,7 +93,7 @@ pipe_source::~pipe_source ()
 
   fclose(d_cmd_stdout);
 
-  //kill(d_cmd_pid, SIGTERM);
+  kill(d_cmd_pid, SIGTERM);
 
   do {
     ret = waitpid(d_cmd_pid, &pstat, 0);
@@ -104,12 +104,16 @@ pipe_source::~pipe_source ()
     return ;
   }
 
-  if (WIFEXITED(pstat))
+  if (WIFEXITED(pstat)) {
     std::cerr << "Process exited with code " << WEXITSTATUS(pstat) << std::endl;
-  else if (WIFSIGNALED(pstat))
-    std::cerr << "Process exited with signal " << WTERMSIG(pstat) << std::endl;
-  else
+  }
+  else if (WIFSIGNALED(pstat)) {
+    if (WTERMSIG(pstat) != SIGTERM)
+      std::cerr << "Process exited with signal " << WTERMSIG(pstat) << std::endl;
+  }
+  else {
     std::cerr << "Abnormal process termination" << std::endl;
+  }
 }
 
 
