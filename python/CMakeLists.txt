@@ -39,6 +39,6 @@ GR_PYTHON_INSTALL(
 ########################################################################
 include(GrTest)
 
-#set(GR_TEST_TARGET_DEPS gnuradio-pipe)
-#set(GR_TEST_PYTHON_DIRS ${CMAKE_BINARY_DIR}/swig)
-#GR_ADD_TEST(qa_howto ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_pipe.py)
+set(GR_TEST_TARGET_DEPS gnuradio-pipe)
+set(GR_TEST_PYTHON_DIRS ${CMAKE_BINARY_DIR}/swig)
+GR_ADD_TEST(qa_pipe ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_pipe.py)
