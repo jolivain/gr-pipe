@@ -43,18 +43,16 @@ class qa_pipe (gr_unittest.TestCase):
         self.assertEqual (expected_result, result_data)
 
     # def test_002_pipe_filter (self):
-    #     test_str = "Hello GNU Radio"
+    #     test_str = "Hello GNU Radio!"
     #     src_data = map(lambda x: ord(x), list(test_str))
     #     expected_result = tuple(map(lambda x: long(ord(x)), list(test_str.upper())))
-    #     src = gr.vector_source_b (src_data)
+    #     src = gr.vector_source_b (src_data, True)
     #     pipe_filter = pipe_swig.filter(gr.sizeof_char, gr.sizeof_char, 1.0, "tr a-z A-Z")
-    #     pipe_filter.set_unbuffered(True)
+    #     head = gr.head(gr.sizeof_char, len(test_str))
     #     dst = gr.vector_sink_b ()
-    #     self.tb.connect (src, pipe_filter, dst)
-    #     self.tb.run ()
-    #     time.sleep(1)
+    #     self.tb.connect (src, pipe_filter, head, dst)
+    #     self.tb.run () 
     #     result_data = dst.data ()
-    #     print result_data
     #     self.assertEqual (expected_result, result_data)
 
     def test_003_pipe_sink (self):
