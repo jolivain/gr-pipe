@@ -7,13 +7,15 @@
 //load generated python docstrings
 %include "pipe_swig_doc.i"
 
-
 %{
-#include "pipe_filter.h"
-#include "pipe_source.h"
-#include "pipe_sink.h"
+#include "pipe/filter.h"
+#include "pipe/source.h"
+#include "pipe/sink.h"
 %}
 
-%include "pipe_filter.i"
-%include "pipe_source.i"
-%include "pipe_sink.i"
+%include "pipe/filter.h"
+GR_SWIG_BLOCK_MAGIC2(pipe, filter);
+%include "pipe/source.h"
+GR_SWIG_BLOCK_MAGIC2(pipe, source);
+%include "pipe/sink.h"
+GR_SWIG_BLOCK_MAGIC2(pipe, sink);
