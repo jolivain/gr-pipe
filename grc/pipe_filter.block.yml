@@ -1,45 +1,71 @@
 id: pipe_filter
-label: filter
-category: '[pipe]'
+label: Pipe Filter
+category: '[Pipe]'
+
+parameters:
+- id: in_type
+  label: Input Type
+  dtype: enum
+  options: [complex, float, int, short, byte]
+  option_attributes:
+    size: [gr.sizeof_gr_complex, gr.sizeof_float, gr.sizeof_int,
+           gr.sizeof_short, gr.sizeof_char]
+  hide: part
+- id: in_vlen
+  label: Input Vec Length
+  default: '1'
+  dtype: int
+  hide: ${ 'part' if in_vlen == 1 else 'none' }
+- id: out_type
+  label: Output Type
+  dtype: enum
+  options: [complex, float, int, short, byte]
+  option_attributes:
+    size: [gr.sizeof_gr_complex, gr.sizeof_float, gr.sizeof_int,
+           gr.sizeof_short, gr.sizeof_char]
+  hide: part
+- id: out_vlen
+  label: Output Vec Length
+  default: '1'
+  dtype: int
+  hide: ${ 'part' if out_vlen == 1 else 'none' }
+- id: rel_rate
+  label: Relative Rate
+  default: '1.0'
+  dtype: real
+  hide: ${ 'part' if rel_rate == 1.0 else 'none' }
+- id: command
+  label: Command
+  dtype: string
+- id: unbuffered
+  label: Unbuffered
+  dtype: bool
+  default: 'False'
+  options: ['False', 'True']
+  option_labels: ['No', 'Yes']
+  hide: ${ 'part' if unbuffered == 'No' else 'none' }
+
+asserts:
+- ${ in_vlen > 0 }
+- ${ out_vlen > 0}
+- ${ len(command) > 0 }
+
+inputs:
+- label: in
+  domain: stream
+  dtype: ${in_type}
+  vlen: ${in_vlen}
+
+outputs:
+- label: out
+  domain: stream
+  dtype: ${out_type}
+  vlen: ${out_vlen}
 
 templates:
   imports: import pipe
-  make: pipe.filter(${in_item_sz}, ${out_item_sz}, ${relative_rate}, ${*cmd})
+  make: |-
+      pipe.filter(${in_type.size}*${in_vlen}, ${out_type.size}*${out_vlen}, ${rel_rate}, ${command})
+      self.${id}.set_unbuffered(${unbuffered})
 
-#  Make one 'parameters' list entry for every parameter you want settable from the GUI.
-#     Keys include:
-#     * id (makes the value accessible as \$keyname, e.g. in the make entry)
-#     * label (label shown in the GUI)
-#     * dtype (e.g. int, float, complex, byte, short, xxx_vector, ...)
-parameters:
-- id: ...
-  label: ...
-  dtype: ...
-- id: ...
-  label: ...
-  dtype: ...
-
-#  Make one 'inputs' list entry per input and one 'outputs' list entry per output.
-#  Keys include:
-#      * label (an identifier for the GUI)
-#      * domain (optional - stream or message. Default is stream)
-#      * dtype (e.g. int, float, complex, byte, short, xxx_vector, ...)
-#      * vlen (optional - data stream vector length. Default is 1)
-#      * optional (optional - set to 1 for optional inputs. Default is 0)
-inputs:
-- label: ...
-  domain: ...
-  dtype: ...
-  vlen: ...
-  optional: ...
-
-outputs:
-- label: ...
-  domain: ...
-  dtype: ...
-  vlen: ...
-  optional: ...
-
-#  'file_format' specifies the version of the GRC yml format used in the file
-#  and should usually not be changed.
 file_format: 1

@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2020 Julien Olivain <juju@cotds.org>.
+ * Copyright 2012-2020 Julien Olivain <juju@cotds.org>.
  *
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,9 +28,10 @@ namespace gr {
   namespace pipe {
 
     /*!
-     * \brief <+description of block+>
-     * \ingroup pipe
+     * \brief gr-pipe is a set of blocks for using any program as a
+     * source, sink or filter by using standard I/O pipes.
      *
+     * \ingroup pipe
      */
     class PIPE_API filter : virtual public gr::block
     {
@@ -46,10 +47,12 @@ namespace gr {
        * creating new instances.
        */
       static sptr make(size_t in_item_sz, size_t out_item_sz, double relative_rate, const char *cmd);
+
+      virtual bool unbuffered () const = 0;
+      virtual void set_unbuffered (bool unbuffered) = 0;
     };
 
   } // namespace pipe
 } // namespace gr
 
 #endif /* INCLUDED_PIPE_FILTER_H */
-
