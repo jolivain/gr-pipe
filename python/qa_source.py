@@ -22,6 +22,7 @@
 from gnuradio import gr, gr_unittest
 from gnuradio import blocks
 import pipe_swig as pipe
+import time
 
 class qa_source(gr_unittest.TestCase):
 
@@ -32,9 +33,16 @@ class qa_source(gr_unittest.TestCase):
         self.tb = None
 
     def test_001_t(self):
-        # set up fg
-        self.tb.run()
-        # check data
+        test_str = "Hello GNU Radio"
+        expected_result = tuple(map(lambda x: ord(x), list(test_str)))
+        pipe_source = pipe.source(gr.sizeof_char, "echo -n " + test_str)
+        head = blocks.head(gr.sizeof_char, len(test_str))
+        dst = blocks.vector_sink_b ()
+        self.tb.connect (pipe_source, head, dst)
+        self.tb.run ()
+        time.sleep(0.1)
+        result_data = dst.data ()
+        self.assertEqual (expected_result, result_data)
 
 
 if __name__ == '__main__':

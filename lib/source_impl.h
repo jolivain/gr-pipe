@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2020 Julien Olivain <juju@cotds.org>.
+ * Copyright 2012-2020 Julien Olivain <juju@cotds.org>.
  *
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,6 +21,8 @@
 #ifndef INCLUDED_PIPE_SOURCE_IMPL_H
 #define INCLUDED_PIPE_SOURCE_IMPL_H
 
+#include <stdio.h>
+
 #include <pipe/source.h>
 
 namespace gr {
@@ -29,7 +31,18 @@ namespace gr {
     class source_impl : public source
     {
      private:
-      // Nothing to declare in this block.
+      size_t d_out_item_sz;
+
+      // Runtime data
+      int d_cmd_stdout_pipe[2];
+      FILE *d_cmd_stdout;
+      pid_t d_cmd_pid;
+
+      void create_command_process(const char *cmd);
+      void create_pipe(int pipe[2]);
+      void set_fd_flags(int fd, long flags);
+      void reset_fd_flags(int fd, long flags);
+      int  read_process_output(uint8_t *out, int nitems);
 
      public:
       source_impl(size_t out_item_sz, const char *cmd);
