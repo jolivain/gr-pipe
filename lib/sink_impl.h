@@ -21,6 +21,7 @@
 #ifndef INCLUDED_PIPE_SINK_IMPL_H
 #define INCLUDED_PIPE_SINK_IMPL_H
 
+#include <stdio.h>
 #include <pipe/sink.h>
 
 namespace gr {
@@ -29,11 +30,27 @@ namespace gr {
     class sink_impl : public sink
     {
      private:
-      // Nothing to declare in this block.
+      size_t d_in_item_sz;
+      bool   d_unbuffered;
+
+      // Runtime data
+      int d_cmd_stdin_pipe[2];
+      FILE *d_cmd_stdin;
+      pid_t d_cmd_pid;
+
+      void create_command_process(const char *cmd);
+      void create_pipe(int pipe[2]);
+      void set_fd_flags(int fd, long flags);
+      void reset_fd_flags(int fd, long flags);
+      int write_process_input(const uint8_t *in, int nitems);
+
 
      public:
       sink_impl(size_t in_item_sz, const char *cmd);
       ~sink_impl();
+
+      bool unbuffered () const;
+      void set_unbuffered (bool unbuffered);
 
       // Where all the action really happens
       int work(

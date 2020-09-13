@@ -22,6 +22,8 @@
 from gnuradio import gr, gr_unittest
 from gnuradio import blocks
 import pipe_swig as pipe
+import os
+import time
 
 class qa_sink(gr_unittest.TestCase):
 
@@ -32,9 +34,19 @@ class qa_sink(gr_unittest.TestCase):
         self.tb = None
 
     def test_001_t(self):
-        # set up fg
-        self.tb.run()
-        # check data
+        test_str = "Hello GNU Radio"
+        filename = "/tmp/test_003_pipe_sink." + str(os.getpid())
+        src_data = tuple(map(lambda x: ord(x), list(test_str)))
+        src = blocks.vector_source_b (src_data)
+        pipe_sink = pipe.sink(gr.sizeof_char, "cat > " + filename)
+        pipe_sink.set_unbuffered(True)
+        self.tb.connect (src, pipe_sink)
+        self.tb.run ()
+        time.sleep(0.1)
+        with open(filename, "r") as f:
+            out_data = f.read()
+        os.unlink(filename)
+        self.assertEqual (test_str, out_data)
 
 
 if __name__ == '__main__':

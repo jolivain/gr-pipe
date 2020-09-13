@@ -46,6 +46,9 @@ namespace gr {
        * creating new instances.
        */
       static sptr make(size_t in_item_sz, const char *cmd);
+
+      virtual bool unbuffered () const = 0;
+      virtual void set_unbuffered (bool unbuffered) = 0;
     };
 
   } // namespace pipe
