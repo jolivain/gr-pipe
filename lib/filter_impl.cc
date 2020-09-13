@@ -41,8 +41,8 @@ namespace gr {
      */
     filter_impl::filter_impl(size_t in_item_sz, size_t out_item_sz, double relative_rate, const char *cmd)
       : gr::block("filter",
-              gr::io_signature::make(<+MIN_IN+>, <+MAX_IN+>, sizeof(<+ITYPE+>)),
-              gr::io_signature::make(<+MIN_OUT+>, <+MAX_OUT+>, sizeof(<+OTYPE+>)))
+              gr::io_signature::make(1, 1, in_item_sz),
+              gr::io_signature::make(1, 1, out_item_sz))
     {}
 
     /*
@@ -64,8 +64,8 @@ namespace gr {
                        gr_vector_const_void_star &input_items,
                        gr_vector_void_star &output_items)
     {
-      const <+ITYPE+> *in = (const <+ITYPE+> *) input_items[0];
-      <+OTYPE+> *out = (<+OTYPE+> *) output_items[0];
+      const uint8_t *in = (const uint8_t *) input_items[0];
+      uint8_t *out = (uint8_t *) output_items[0];
 
       // Do <+signal processing+>
       // Tell runtime system how many input items we consumed on
