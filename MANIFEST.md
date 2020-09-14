@@ -1,17 +1,23 @@
-title: The PIPE OOT Module
-brief: Short description of gr-pipe
+title: The Pipe Module
+brief: Collection of blocks for using any program as a source, sink or filter using Unix pipes.
 tags: # Tags are arbitrary, but look at CGRAN what other authors are using
   - sdr
+  - interface
 author:
-  - Author Name <authors@email.address>
+  - Julien Olivain <juju@cotds.org>
 copyright_owner:
-  - Copyright Owner 1
-license:
-gr_supported_version: # Put a comma separated list of supported GR versions here
-#repo: # Put the URL of the repository here, or leave blank for default
-#website: <module_website> # If you have a separate project website, put it here
-#icon: <icon_url> # Put a URL to a square image here that will be used as an icon on CGRAN
+  - Julien Olivain
+license: GPLv2
+gr_supported_version: v3.8
+repo: https://github.com/jolivain/gr-pipe
 ---
-A longer, multi-line description of gr-pipe.
-You may use some *basic* Markdown here.
-If left empty, it will try to find a README file instead.
+gr-pipe is a set GNU Radio block for using any program as a source,
+sink or filter by using standard Unix I/O pipes.
+
+The main goals of these blocks are:
+- Fast development of new experimental blocks (no need to dig into C++
+  / GNU Radio internals / SWIG / Python).
+- Ability to use any programming language able to deal with standard
+  input and output (code a block in your preferred language: C, Java,
+  MatLab, Perl, Ruby...).
+- Simple interface: sequence of raw samples
