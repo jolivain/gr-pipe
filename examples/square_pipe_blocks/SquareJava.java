@@ -1,3 +1,10 @@
+/*
+ * Compile with:
+ *   javac SquareJava.java
+ * Run with:
+ *   java SquareJava
+ */
+
 import java.io.*;
 import java.nio.ByteOrder;
 

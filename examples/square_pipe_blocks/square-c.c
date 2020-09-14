@@ -1,3 +1,10 @@
+/*
+ * Copmiles with:
+ *   cc -O2 -Wall -o square-c square-c.c
+ * Run with:
+ *   ./square-c
+ */
+
 #include <stdlib.h>
 #include <stdio.h>
 

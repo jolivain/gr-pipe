@@ -1,4 +1,8 @@
 #! /usr/bin/env python
+#
+# Execute with:
+#   python square-python.py
+#
 
 import struct
 import sys
