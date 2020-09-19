@@ -1,6 +1,6 @@
 title: The Pipe Module
 brief: Collection of blocks for using any program as a source, sink or filter using Unix pipes.
-tags: # Tags are arbitrary, but look at CGRAN what other authors are using
+tags:
   - sdr
   - interface
 author:
