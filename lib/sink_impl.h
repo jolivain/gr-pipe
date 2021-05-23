@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2020 Julien Olivain <juju@cotds.org>.
+ * Copyright 2020 Julien Olivain <ju.o@free.fr>.
  *
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

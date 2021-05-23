@@ -115,4 +115,4 @@ already already installed.
 
 Feedback and comments are welcome !
 
-Julien Olivain <juju@cotds.org>
+Julien Olivain <ju.o@free.fr>
