@@ -27,7 +27,7 @@ outputs:
   vlen: ${out_vlen}
 
 templates:
-  imports: import pipe
+  imports: import gnuradio.pipe as pipe
   make: pipe.source(${out_type.size}*${out_vlen}, ${command})
 
 file_format: 1

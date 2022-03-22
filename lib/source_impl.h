@@ -23,7 +23,7 @@
 
 #include <stdio.h>
 
-#include <pipe/source.h>
+#include <gnuradio/pipe/source.h>
 
 namespace gr {
   namespace pipe {

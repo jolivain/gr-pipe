@@ -22,7 +22,7 @@
 #define INCLUDED_PIPE_SINK_IMPL_H
 
 #include <stdio.h>
-#include <pipe/sink.h>
+#include <gnuradio/pipe/sink.h>
 
 namespace gr {
   namespace pipe {
