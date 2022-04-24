@@ -1,6 +1,6 @@
 options:
   parameters:
-    author: Julien Olivain <juju@cotds.org>
+    author: Julien Olivain <ju.o@free.fr>
     category: Custom
     cmake_opt: ''
     comment: ''

@@ -4,7 +4,7 @@ tags:
   - sdr
   - interface
 author:
-  - Julien Olivain <juju@cotds.org>
+  - Julien Olivain <ju.o@free.fr>
 copyright_owner:
   - Julien Olivain
 license: GPLv2
