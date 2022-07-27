@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(sink.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(5b539b31b8d217aed133804b95c29989)                     */
+/* BINDTOOL_HEADER_FILE_HASH(d590e111df0faeb048025df66be57da0)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -30,45 +30,22 @@ namespace py = pybind11;
 void bind_sink(py::module& m)
 {
 
-    using sink    = ::gr::pipe::sink;
+    using sink = ::gr::pipe::sink;
 
 
-    py::class_<sink, gr::sync_block, gr::block, gr::basic_block,
-        std::shared_ptr<sink>>(m, "sink", D(sink))
+    py::class_<sink, gr::sync_block, gr::block, gr::basic_block, std::shared_ptr<sink>>(
+        m, "sink", D(sink))
 
-        .def(py::init(&sink::make),
-           py::arg("in_item_sz"),
-           py::arg("cmd"),
-           D(sink,make)
-        )
-        
+        .def(py::init(&sink::make), py::arg("in_item_sz"), py::arg("cmd"), D(sink, make))
 
 
+        .def("unbuffered", &sink::unbuffered, D(sink, unbuffered))
 
 
-        
-        .def("unbuffered",&sink::unbuffered,       
-            D(sink,unbuffered)
-        )
-
-
-        
-        .def("set_unbuffered",&sink::set_unbuffered,       
-            py::arg("unbuffered"),
-            D(sink,set_unbuffered)
-        )
+        .def("set_unbuffered",
+             &sink::set_unbuffered,
+             py::arg("unbuffered"),
+             D(sink, set_unbuffered))
 
         ;
-
-
-
-
 }
-
-
-
-
-
-
-
-

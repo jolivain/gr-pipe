@@ -14,7 +14,7 @@
 /* BINDTOOL_GEN_AUTOMATIC(0)                                                       */
 /* BINDTOOL_USE_PYGCCXML(0)                                                        */
 /* BINDTOOL_HEADER_FILE(source.h)                                        */
-/* BINDTOOL_HEADER_FILE_HASH(ebc58e6bb38abcff8ea1fd2f31d5f842)                     */
+/* BINDTOOL_HEADER_FILE_HASH(4488156028b5e1b2bed76a5e036bca0a)                     */
 /***********************************************************************************/
 
 #include <pybind11/complex.h>
@@ -30,32 +30,20 @@ namespace py = pybind11;
 void bind_source(py::module& m)
 {
 
-    using source    = ::gr::pipe::source;
+    using source = ::gr::pipe::source;
 
 
-    py::class_<source, gr::sync_block, gr::block, gr::basic_block,
-        std::shared_ptr<source>>(m, "source", D(source))
+    py::class_<source,
+               gr::sync_block,
+               gr::block,
+               gr::basic_block,
+               std::shared_ptr<source>>(m, "source", D(source))
 
         .def(py::init(&source::make),
-           py::arg("out_item_sz"),
-           py::arg("cmd"),
-           D(source,make)
-        )
-        
-
+             py::arg("out_item_sz"),
+             py::arg("cmd"),
+             D(source, make))
 
 
         ;
-
-
-
-
 }
-
-
-
-
-
-
-
-

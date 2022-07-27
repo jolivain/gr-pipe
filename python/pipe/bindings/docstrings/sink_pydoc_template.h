@@ -7,7 +7,7 @@
  *
  */
 #include "pydoc_macros.h"
-#define D(...) DOC(gr,pipe, __VA_ARGS__ )
+#define D(...) DOC(gr, pipe, __VA_ARGS__)
 /*
   This file contains placeholders for docstrings for the Python bindings.
   Do not edit! These were automatically extracted during the binding process
@@ -15,22 +15,19 @@
  */
 
 
- 
- static const char *__doc_gr_pipe_sink = R"doc()doc";
+static const char* __doc_gr_pipe_sink = R"doc()doc";
 
 
- static const char *__doc_gr_pipe_sink_sink_0 = R"doc()doc";
+static const char* __doc_gr_pipe_sink_sink_0 = R"doc()doc";
 
 
- static const char *__doc_gr_pipe_sink_sink_1 = R"doc()doc";
+static const char* __doc_gr_pipe_sink_sink_1 = R"doc()doc";
 
 
- static const char *__doc_gr_pipe_sink_make = R"doc()doc";
+static const char* __doc_gr_pipe_sink_make = R"doc()doc";
 
 
- static const char *__doc_gr_pipe_sink_unbuffered = R"doc()doc";
+static const char* __doc_gr_pipe_sink_unbuffered = R"doc()doc";
 
 
- static const char *__doc_gr_pipe_sink_set_unbuffered = R"doc()doc";
-
-  
+static const char* __doc_gr_pipe_sink_set_unbuffered = R"doc()doc";
