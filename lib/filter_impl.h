@@ -22,7 +22,7 @@
 #define INCLUDED_PIPE_FILTER_IMPL_H
 
 #include <stdio.h>
-#include <pipe/filter.h>
+#include <gnuradio/pipe/filter.h>
 
 namespace gr {
   namespace pipe {

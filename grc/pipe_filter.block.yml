@@ -63,7 +63,7 @@ outputs:
   vlen: ${out_vlen}
 
 templates:
-  imports: import pipe
+  imports: import gnuradio.pipe as pipe
   make: |-
       pipe.filter(${in_type.size}*${in_vlen}, ${out_type.size}*${out_vlen}, ${rel_rate}, ${command})
       self.${id}.set_unbuffered(${unbuffered})

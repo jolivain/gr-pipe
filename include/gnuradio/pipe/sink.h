@@ -18,10 +18,10 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_PIPE_SOURCE_H
-#define INCLUDED_PIPE_SOURCE_H
+#ifndef INCLUDED_PIPE_SINK_H
+#define INCLUDED_PIPE_SINK_H
 
-#include <pipe/api.h>
+#include <gnuradio/pipe/api.h>
 #include <gnuradio/sync_block.h>
 
 namespace gr {
@@ -32,24 +32,27 @@ namespace gr {
      * \ingroup pipe
      *
      */
-    class PIPE_API source : virtual public gr::sync_block
+    class PIPE_API sink : virtual public gr::sync_block
     {
      public:
-      typedef boost::shared_ptr<source> sptr;
+      typedef std::shared_ptr<sink> sptr;
 
       /*!
-       * \brief Return a shared_ptr to a new instance of pipe::source.
+       * \brief Return a shared_ptr to a new instance of pipe::sink.
        *
-       * To avoid accidental use of raw pointers, pipe::source's
+       * To avoid accidental use of raw pointers, pipe::sink's
        * constructor is in a private implementation
-       * class. pipe::source::make is the public interface for
+       * class. pipe::sink::make is the public interface for
        * creating new instances.
        */
-      static sptr make(size_t out_item_sz, const char *cmd);
+      static sptr make(size_t in_item_sz, const char *cmd);
+
+      virtual bool unbuffered () const = 0;
+      virtual void set_unbuffered (bool unbuffered) = 0;
     };
 
   } // namespace pipe
 } // namespace gr
 
-#endif /* INCLUDED_PIPE_SOURCE_H */
+#endif /* INCLUDED_PIPE_SINK_H */
 

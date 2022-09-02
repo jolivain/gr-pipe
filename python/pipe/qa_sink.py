@@ -21,7 +21,7 @@
 
 from gnuradio import gr, gr_unittest
 from gnuradio import blocks
-import pipe_swig as pipe
+import pipe_python as pipe
 import os
 import time
 

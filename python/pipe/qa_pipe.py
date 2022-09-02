@@ -22,7 +22,7 @@
 
 from gnuradio import gr, gr_unittest
 import os, time
-import pipe_swig
+import pipe_python
 
 class qa_pipe (gr_unittest.TestCase):
 
